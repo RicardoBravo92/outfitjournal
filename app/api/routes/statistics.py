@@ -4,7 +4,7 @@ from sqlalchemy import func, desc
 from typing import List, Dict
 from datetime import datetime, timedelta
 from ...core.database import get_db
-from ...models.clothing import Clothing, Outfit
+from ...models.clothing import Clothing
 from ...services.statistics import StatisticsService
 from ...models.user import User
 from ..dependencies.auth import get_current_user

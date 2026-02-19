@@ -3,38 +3,35 @@ from fastapi import HTTPException, status
 from ..services.user import get_user_by_email, get_user_by_username, create_user
 from ..models.clothing import Clothing
 from ..models.user import User
-from ..schemas.clothing import ClothingCreate ,
+from ..schemas.clothing import ClothingCreate , ClothingUpdate
 from ..core.security import get_password_hash, verify_password
-from ...services.cloudinary_service import CloudinaryService
+from .cloudinary_service import CloudinaryService
 
 
 class ClothingService:
-    def create_clothing(self, db: Session, clothing_data: ClothingCreate,current_user:User) -> Clothing:
+    def create_clothing(self, db: Session, clothing_data: ClothingCreate, current_user: User, image=None) -> Clothing:
         """Create a new clothing item with optional image upload to Cloudinary"""
         image_url = None
         if image and image.filename:
-        try:
-            image_url = await CloudinaryService.upload_image(image, folder=f"users/{current_user.id}")
-        except Exception as e:
-            logger.error(f"Error uploading image: {e}")
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Error uploading image"
-            )
-    
+            try:
+                image_url = CloudinaryService.upload_image(image, folder=f"users/{current_user.id}")
+            except Exception as e:
+                # logger.error(f"Error uploading image: {e}")
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail="Error uploading image"
+                )
         db_clothing = Clothing(
-        name=name,
-        category=category,
-        description=description,
-        is_active=is_active,
-        image_url=image_url,
-        owner_id=current_user.id
-    )
-    
+            name=clothing_data.name,
+            category=clothing_data.category,
+            description=clothing_data.description,
+            is_active=clothing_data.is_active if hasattr(clothing_data, 'is_active') else True,
+            image_url=image_url,
+            owner_id=current_user.id
+        )
         db.add(db_clothing)
         db.commit()
         db.refresh(db_clothing)
-    
         return db_clothing
     
     def get_user_clothes(self,db: Session, current_user:User,skip:int,limit:int,is_active:bool,category:str):
