@@ -3,7 +3,8 @@ from sqlalchemy.orm import Session
 from typing import List
 from datetime import datetime
 from ...core.database import get_db
-from ...models.clothing import Outfit, Clothing
+from ...models.clothing import Clothing
+from ...models.outfit import Outfit
 from ...models.user import User
 from ...schemas.outfit import Outfit as OutfitSchema, OutfitCreate, OutfitUpdate
 from ..dependencies.auth import get_current_user

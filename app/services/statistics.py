@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import desc, func
 from datetime import datetime, timedelta
 from ..models.clothing import Clothing
+from ..models.outfit import Outfit
 from ..models.user import User
 
 class StatisticsService:
@@ -61,7 +62,7 @@ class StatisticsService:
 
     @staticmethod
     def get_monthly_frequency(db: Session, current_user: User, months: int = 6):
-        from ..models.clothing import Outfit
+        # Outfit ya importado arriba
         cutoff_date = datetime.utcnow() - timedelta(days=30 * months)
         outfits = db.query(
             func.date_trunc('month', Outfit.used_date).label('month'),

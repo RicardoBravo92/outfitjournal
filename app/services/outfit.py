@@ -4,7 +4,8 @@ from ..services.user import get_user_by_email, get_user_by_username, create_user
 from ..models.clothing import Clothing
 from ..schemas.outfit import OutfitCreate, OutfitUpdate
 from sqlalchemy.exc import NoResultFound
-from ..models.clothing import Outfit, Clothing
+from ..models.clothing import Clothing
+from ..models.outfit import Outfit
 from ..models.user import User
 
 
