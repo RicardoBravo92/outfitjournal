@@ -34,29 +34,7 @@ def create_outfit(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    db_outfit = Outfit(
-        name=outfit_data.name,
-        description=outfit_data.description,
-        occasion=outfit_data.occasion,
-        owner_id=current_user.id
-    )
-    db.add(db_outfit)
-    db.flush()
-    
-    for clothing_id in outfit_data.clothes_ids:
-        clothing = db.query(Clothing).filter(
-            Clothing.id == clothing_id,
-            Clothing.owner_id == current_user.id
-        ).first()
-        
-        if clothing:
-            db_outfit.clothes.append(clothing)
-            clothing.times_used += 1
-            clothing.last_used = datetime.now()
-    
-    db.commit()
-    db.refresh(db_outfit)
-    return db_outfit
+    return OutfitService.create_outfit(db,outfit_data,current_user)
 
 @router.put("/{outfit_id}", response_model=OutfitSchema)
 def update_outfit(
@@ -65,31 +43,7 @@ def update_outfit(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    db_outfit = db.query(Outfit).filter(
-        Outfit.id == outfit_id,
-        Outfit.owner_id == current_user.id
-    ).first()
-    
-    if not db_outfit:
-        raise HTTPException(status_code=404, detail="Outfit not found")
-    
-    for key, value in outfit_update.dict(exclude_unset=True).items():
-        if key != "clothes_ids":
-            setattr(db_outfit, key, value)
-    
-    if outfit_update.clothes_ids is not None:
-        db_outfit.clothes = []
-        for clothing_id in outfit_update.clothes_ids:
-            clothing = db.query(Clothing).filter(
-                Clothing.id == clothing_id,
-                Clothing.owner_id == current_user.id
-            ).first()
-            if clothing:
-                db_outfit.clothes.append(clothing)
-    
-    db.commit()
-    db.refresh(db_outfit)
-    return db_outfit
+    return OutfitService.update_outfit(db,outfit_id,outfit_update,current_user)
 
 @router.delete("/{outfit_id}")
 def delete_outfit(
@@ -97,15 +51,4 @@ def delete_outfit(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    db_outfit = db.query(Outfit).filter(
-        Outfit.id == outfit_id,
-        Outfit.owner_id == current_user.id
-    ).first()
-    
-    if not db_outfit:
-        raise HTTPException(status_code=404, detail="Outfit not found")
-    
-    db.delete(db_outfit)
-    db.commit()
-    
-    return {"message": "Outfit deleted successfully"}
+   return OutfitService.delete_outfit(db,outfit_id,current_user)

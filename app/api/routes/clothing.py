@@ -5,7 +5,7 @@ from typing import List, Optional
 from ...core.database import get_db
 from ...models.user import User
 from ...schemas.clothing import ClothingSchema, ClothingCreate, ClothingUpdate
-from ...services.Clothing import ClothingService
+from ...services.clothing import ClothingService
 from ..dependencies.auth import get_current_user
 import logging
 
@@ -36,12 +36,12 @@ def get_clothing(
 
 @router.post("/", response_model=ClothingSchema, status_code=status.HTTP_201_CREATED)
 async def create_clothing(
-    db: AsyncSession = Depends(get_db),
-    clothing_data: ClothingCreate,
+    db: Session = Depends(get_db),
+    clothing_data: ClothingCreate = Form(...),
     current_user: User = Depends(get_current_user)
 ):
-        try:
-        clothing = await ClothingService.create_clothing(db, create_clothing,clothing_data,current_user)
+    try:
+        clothing = ClothingService.create_clothing(db, clothing_data, current_user)
         return clothing
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
