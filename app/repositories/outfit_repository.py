@@ -2,11 +2,11 @@ from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.base_repository import BaseRepository
 from app.models.outfit import Outfit
-from app.schemas.outfit import OutfitCreate
+from app.schemas.outfit import OutfitCreate , OutfitUpdate
 from sqlalchemy import select
 from ..models.user import User
 
-class OutfitRepository(BaseRepository[Outfit, OutfitCreate]):
+class OutfitRepository(BaseRepository[Outfit, OutfitCreate, OutfitUpdate]):
     
     async def get_user_outfits(self, db: AsyncSession, skip:int,limit:int,current_user:User):
         outfits = db.query(Outfit).filter(

@@ -1,13 +1,13 @@
-from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.base_repository import BaseRepository
 from app.models.clothing import Clothing
-from app.schemas.clothing import ClothingCreate
+from app.schemas.clothing import ClothingCreate ,ClothingUpdate
 from datetime import datetime, timedelta
 from sqlalchemy import select, desc, func
 from ..models.user import User
+from ..models.outfit import Outfit
 
-class StatisticRepository(BaseRepository[Clothing, ClothingCreate, ClothingCreate]):
+class StatisticRepository(BaseRepository[Clothing, ClothingCreate, ClothingUpdate]):
     
     async def get_most_used_clothes(self, db: AsyncSession, current_user: User, limit: int = 10):
         clothes = db.query(Clothing).filter(

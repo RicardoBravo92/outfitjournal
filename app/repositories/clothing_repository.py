@@ -2,11 +2,11 @@ from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.base_repository import BaseRepository
 from app.models.clothing import Clothing
-from app.schemas.clothing import ClothingCreate
+from app.schemas.clothing import ClothingCreate, ClothingUpdate
 from sqlalchemy import select
 from ..models.user import User
 
-class ClothingRepository(BaseRepository[Clothing, ClothingCreate, ClothingCreate]):
+class ClothingRepository(BaseRepository[Clothing, ClothingCreate, ClothingUpdate]):
     
     async def get_user_clothes(self, db: AsyncSession, current_user:User,skip:int,limit:int,is_active:bool,category:str):
         """Get all clothes for the current user"""
