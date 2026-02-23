@@ -2,13 +2,13 @@ from sqlalchemy.orm import Session
 from typing import Optional
 from ..models.user import User
 from ..schemas.user import UserCreate
-from ..core.security import get_password_hash, verify_password
+from ..core.security import get_password_hash, verify_password ,create_access_token
 from app.repositories.user_repository import user_repository
 
 class UserService:
     
-    def __init__(self):
-        self.repository = user_repository
+    def __init__(self,repository=user_repository):
+        self.repository = repository
 
     async def create_user(self, db: Session, user_data: UserCreate) -> User:
         existing = await self.repository.get_by_email(db, user_data.email)
@@ -32,4 +32,5 @@ class UserService:
             return None
         if not verify_password(password, user.hashed_password):
             return None
-        return user
+        token= await create_access_token(user) 
+        return token

@@ -12,8 +12,8 @@ from ..repositories.outfit_repository import Outfit_repository
 
 class OutfitService:
     
-    def __init__(self):
-        self.repository = Outfit_repository 
+    def __init__(self, repository=Outfit_repository):
+        self.repository = repository 
 
     def get_outfits(self, db: Session,skip:int,limit:int,current_user:User):
         return self.repository.get_user_outfits(db,skip,limit,current_user)

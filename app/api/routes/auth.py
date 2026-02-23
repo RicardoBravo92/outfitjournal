@@ -27,8 +27,8 @@ async def login(
     db: Session = Depends(get_db),
 ):
     try:
-        user = await user_service.authenticate(db, email, password)
-        return user
+        token = await user_service.authenticate(db, email, password)
+        return token
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -38,8 +38,8 @@ async def login(
     db: Session = Depends(get_db),
 ):
     try:
-        user = await user_service.authenticate(db, form_data.username, form_data.password)
-        return user
+        token = await user_service.authenticate(db, form_data.username, form_data.password)
+        return token
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 

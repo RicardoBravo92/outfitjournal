@@ -11,8 +11,8 @@ from .cloudinary_service import CloudinaryService
 
 
 class ClothingService:
-    def __init__(self):
-        self.repository = Clothing_repository   
+    def __init__(self,repository=Clothing_repository):
+        self.repository = repository   
 
     async def create_clothing(self, db: Session, clothing_data: ClothingCreate, current_user: User, image=None) -> Clothing:
         """Create a new clothing item with optional image upload to Cloudinary"""

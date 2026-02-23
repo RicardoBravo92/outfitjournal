@@ -8,8 +8,8 @@ from ..repositories.statistic_repository import StatisticRepository
 
 class StatisticsService:
 
-    def __init__(self):
-        self.repository = StatisticRepository
+    def __init__(self, repository: StatisticRepository):
+        self.repository = repository
 
     @staticmethod
     async def get_most_used_clothes(db: Session, current_user: User, limit: int = 10):
